@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Checkout — Libaas Mehal</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+<link rel="stylesheet" href="assets/shop.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="wordmark">
+      <img src="assets/logo.png" alt="Libaas Mehal logo" width="42" height="42" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%236b1f2a%22/%3E%3Ctext x=%2221%22 y=%2227%22 font-family=%22Georgia,serif%22 font-size=%2218%22 fill=%22%23f6efe0%22 text-anchor=%22middle%22%3ELM%3C/text%3E%3C/svg%3E'" />
+      LIBAAS<span> MEHAL</span>
+    </a>
+    <a class="head-back" href="cart.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+      Back to Cart
+    </a>
+  </div>
+</header>
+
+<main class="shop-main">
+  <p class="shop-eyebrow">Step 2 of 2</p>
+  <h1 class="shop-title">Checkout</h1>
+
+  <div id="checkoutWrap">
+    <!-- populated by JS -->
+  </div>
+</main>
+
+<footer class="shop-footer">Libaas Mehal · Secure order review · support@libaasmehal.com</footer>
+
+<script src="assets/shop-data.js"></script>
+<script>const items=CartStore.get();const wrap=document.getElementById('checkoutWrap');if(items.length===0){wrap.innerHTML=`
+    <div class="shop-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1.2 12.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+      <p>Your cart is empty, so there's nothing to check out yet.</p>
+      <a class="btn btn-solid" href="index.html#catalogue">Browse Catalogue</a>
+    </div>`;}else{const subtotal=cartSubtotal(items);const miniList=items.map(i=>{const d=productByN(i.n);if(!d)return'';return`<li><span>Article ${pad(d.n)} × ${i.qty}</span><span>${fmtPKR(d.price * i.qty)}</span></li>`;}).join('');wrap.innerHTML=`
+    <div class="shop-grid">
+      <form class="checkout-form" id="checkoutForm" novalidate>
+        <p class="form-section-title">Customer Information</p>
+
+        <div class="field" data-field="fullName">
+          <label for="fullName">Full Name <span class="req">*</span></label>
+          <input type="text" id="fullName" name="fullName" autocomplete="name" />
+          <p class="field-error-msg">Please enter your full name.</p>
+        </div>
+
+        <div class="field-row">
+          <div class="field" data-field="phone">
+            <label for="phone">Phone Number <span class="req">*</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="03XX-XXXXXXX" />
+            <p class="field-error-msg">Please enter a valid phone number.</p>
+          </div>
+          <div class="field" data-field="email">
+            <label for="email">Email Address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" />
+            <p class="field-error-msg">Please enter a valid email address.</p>
+          </div>
+        </div>
+
+        <div class="field" data-field="address">
+          <label for="address">Delivery Address <span class="req">*</span></label>
+          <textarea id="address" name="address" autocomplete="street-address"></textarea>
+          <p class="field-error-msg">Please enter your delivery address.</p>
+        </div>
+
+        <div class="field-row">
+          <div class="field" data-field="city">
+            <label for="city">City <span class="req">*</span></label>
+            <input type="text" id="city" name="city" autocomplete="address-level2" />
+            <p class="field-error-msg">Please enter your city.</p>
+          </div>
+          <div class="field" data-field="postalCode">
+            <label for="postalCode">Postal Code <span class="req">*</span></label>
+            <input type="text" id="postalCode" name="postalCode" autocomplete="postal-code" />
+            <p class="field-error-msg">Please enter your postal code.</p>
+          </div>
+        </div>
+
+        <div class="field" data-field="notes">
+          <label for="notes">Order Notes (Optional)</label>
+          <textarea id="notes" name="notes" placeholder="Any special instructions for your order…"></textarea>
+        </div>
+
+        <!-- Honeypot — hidden from real visitors, catches basic spam bots. Leave this field alone. -->
+        <div class="field honeypot">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button type="submit" class="btn btn-solid" id="placeOrderBtn" style="width:100%;">Place Order</button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        <ul class="summary-mini-list">${miniList}</ul>
+        <div class="summary-row total"><span>Grand Total</span><b>${fmtPKR(subtotal)}</b></div>
+      </div>
+    </div>`;wireCheckoutForm(items,subtotal);}
+function wireCheckoutForm(items,subtotal){const form=document.getElementById('checkoutForm');const statusBox=document.getElementById('formStatus');const submitBtn=document.getElementById('placeOrderBtn');const validators={fullName:v=>v.trim().length>=2,phone:v=>/^[0-9+\-\s()]{7,20}$/.test(v.trim()),email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),address:v=>v.trim().length>=5,city:v=>v.trim().length>=2,postalCode:v=>v.trim().length>=3};function validateField(name){const input=form.elements[name];const wrapEl=form.querySelector(`[data-field="${name}"]`);const ok=validators[name](input.value);wrapEl.classList.toggle('error',!ok);return ok;}
+Object.keys(validators).forEach(name=>{form.elements[name].addEventListener('blur',()=>validateField(name));});form.addEventListener('submit',e=>{e.preventDefault();statusBox.className='form-status';statusBox.textContent='';if(form.elements.website.value.trim()!==''){return;}
+let allValid=true;Object.keys(validators).forEach(name=>{if(!validateField(name))allValid=false;});if(!allValid){statusBox.classList.add('show','error');statusBox.textContent='Please fill in all required fields correctly before placing your order.';form.querySelector('.field.error input, .field.error textarea')?.focus();return;}
+submitBtn.disabled=true;submitBtn.textContent='Placing your order…';const payload=new FormData();payload.append('fullName',form.elements.fullName.value.trim());payload.append('phone',form.elements.phone.value.trim());payload.append('email',form.elements.email.value.trim());payload.append('address',form.elements.address.value.trim());payload.append('city',form.elements.city.value.trim());payload.append('postalCode',form.elements.postalCode.value.trim());payload.append('notes',form.elements.notes.value.trim());payload.append('website',form.elements.website.value.trim());payload.append('cart_json',JSON.stringify(items.map(i=>{const d=productByN(i.n);return{article:'Article '+pad(i.n),code:d?d.code:'',qty:i.qty,price:d?d.price:0,lineTotal:d?d.price*i.qty:0};})));payload.append('grand_total',subtotal);fetch('mailer/send-order.php',{method:'POST',body:payload}).then(res=>res.json()).then(data=>{if(data&&data.success){CartStore.set([]);document.getElementById('checkoutWrap').innerHTML=`
+            <div class="order-success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+              <h2>Order Received</h2>
+              <p>Thank you! Your order has been received successfully. Our team will contact you shortly.</p>
+              <a class="btn btn-solid" href="index.html">Return to Homepage</a>
+            </div>`;}else{submitBtn.disabled=false;submitBtn.textContent='Place Order';statusBox.classList.add('show','error');statusBox.textContent=(data&&data.message)||'Something went wrong while sending your order. Please try again, or reach us on WhatsApp.';}}).catch(()=>{submitBtn.disabled=false;submitBtn.textContent='Place Order';statusBox.classList.add('show','error');statusBox.textContent='We could not reach the server. Please check your connection and try again.';});});}</script>
+</body>
+</html>

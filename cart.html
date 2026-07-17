@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your Cart — Libaas Mehal</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+<link rel="stylesheet" href="assets/shop.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="wordmark">
+      <img src="assets/logo.png" alt="Libaas Mehal logo" width="42" height="42" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%236b1f2a%22/%3E%3Ctext x=%2221%22 y=%2227%22 font-family=%22Georgia,serif%22 font-size=%2218%22 fill=%22%23f6efe0%22 text-anchor=%22middle%22%3ELM%3C/text%3E%3C/svg%3E'" />
+      LIBAAS<span> MEHAL</span>
+    </a>
+    <a class="head-back" href="index.html#catalogue">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+      Continue Shopping
+    </a>
+  </div>
+</header>
+
+<main class="shop-main">
+  <p class="shop-eyebrow">Step 1 of 2</p>
+  <h1 class="shop-title">Your Shopping Cart</h1>
+
+  <div id="cartPageWrap">
+    <!-- populated by JS -->
+  </div>
+</main>
+
+<footer class="shop-footer">Libaas Mehal · Secure order review · support@libaasmehal.com</footer>
+
+<script src="assets/shop-data.js"></script>
+<script>function renderCartPage(){const items=CartStore.get();const wrap=document.getElementById('cartPageWrap');if(items.length===0){wrap.innerHTML=`
+      <div class="shop-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1.2 12.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+        <p>Your cart is empty. Browse the catalogue and add a few articles you like.</p>
+        <a class="btn btn-solid" href="index.html#catalogue">Browse Catalogue</a>
+      </div>`;return;}
+const subtotal=cartSubtotal(items);const rows=items.map(i=>{const d=productByN(i.n);if(!d)return'';const lineTotal=d.price*i.qty;return`
+    <div class="cart-row" data-n="${d.n}">
+      <div class="cart-thumb"><img src="assets/p${pad(d.n)}.jpg" alt="Article ${pad(d.n)}" /></div>
+      <div class="cart-info">
+        <p class="ci-code">${d.code} · ${d.dup}</p>
+        <p class="ci-title">Article ${pad(d.n)}</p>
+        <span class="ci-price">${fmtPKR(d.price)} each</span>
+        <div class="cart-row-foot">
+          <div class="qty-stepper" data-n="${d.n}">
+            <button type="button" class="qty-minus" aria-label="Decrease quantity">−</button>
+            <span>${i.qty}</span>
+            <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <span class="cart-line-total">${fmtPKR(lineTotal)}</span>
+          <button type="button" class="cart-remove" data-n="${d.n}" aria-label="Remove Article ${pad(d.n)} from cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2m-1 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z"/></svg>
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>`;}).join('');wrap.innerHTML=`
+    <div class="shop-grid">
+      <div class="cart-list">${rows}</div>
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Items</span><span>${items.reduce((s,i)=>s+i.qty,0)}</span></div>
+        <div class="summary-row total"><span>Total</span><b>${fmtPKR(subtotal)}</b></div>
+        <a class="btn btn-solid" href="checkout.html">Proceed to Checkout</a>
+        <a class="btn btn-ghost" href="index.html#catalogue">Continue Shopping</a>
+      </div>
+    </div>`;}
+document.addEventListener('click',e=>{const minus=e.target.closest('.qty-minus');const plus=e.target.closest('.qty-plus');const remove=e.target.closest('.cart-remove');const items=CartStore.get();if(minus){const n=Number(minus.closest('.qty-stepper').dataset.n);const item=items.find(i=>i.n===n);if(item){item.qty=Math.max(1,item.qty-1);CartStore.set(items);renderCartPage();}}else if(plus){const n=Number(plus.closest('.qty-stepper').dataset.n);const item=items.find(i=>i.n===n);if(item){item.qty+=1;CartStore.set(items);renderCartPage();}}else if(remove){const n=Number(remove.dataset.n);CartStore.set(items.filter(i=>i.n!==n));renderCartPage();}});renderCartPage();</script>
+</body>
+</html>
