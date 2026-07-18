@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
   <url>
     <loc>https://libasmahal.com/</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image><image:loc>https://libasmahal.com/assets/logo.png</image:loc><image:title>Libas Mehal — Unstitched Lawn Suits Pakistan</image:title></image:image>
+    <image:image><image:loc>https://libasmahal.com/assets/p28.webp</image:loc><image:title>Libas Mehal Article 28 — 3-Piece Lawn Suit</image:title></image:image>
+    <image:image><image:loc>https://libasmahal.com/assets/p21.webp</image:loc><image:title>Libas Mehal Article 21 — 3-Piece Lawn Suit</image:title></image:image>
+    <image:image><image:loc>https://libasmahal.com/assets/p20.webp</image:loc><image:title>Libas Mehal Article 20 — 3-Piece Lawn Suit</image:title></image:image>
+    <image:image><image:loc>https://libasmahal.com/assets/p17.webp</image:loc><image:title>Libas Mehal About — Lawn suit detail</image:title></image:image>
   </url>
+
 </urlset>

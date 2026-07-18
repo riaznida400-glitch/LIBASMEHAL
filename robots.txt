@@ -5,3 +5,4 @@ Disallow: /cart.html
 Disallow: /checkout.html
 
 Sitemap: https://libasmahal.com/sitemap.xml
+Sitemap: https://libasmahal.com/sitemap-images.xml

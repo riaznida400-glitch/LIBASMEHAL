@@ -1,107 +1,73 @@
-# =====================================================================
-# Libas Mehal — Performance .htaccess
-# =====================================================================
+# Libas Mehal — Production .htaccess
+# ============================================================
 
-# Enable mod_rewrite
-Options -MultiViews
-Options +FollowSymLinks
+Options -Indexes
+ServerSignature Off
 
-# =====================================================================
-# COMPRESSION (mod_deflate)
-# =====================================================================
+# ── Compression ─────────────────────────────────────────────
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml font/woff font/woff2 application/font-woff application/font-woff2
-  BrowserMatch ^Mozilla/4 gzip-only-text/html
-  BrowserMatch ^Mozilla/4\.0[678] no-gzip
-  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml application/xml
+  AddOutputFilterByType DEFLATE font/woff font/woff2
 </IfModule>
 
-# =====================================================================
-# BROWSER CACHING
-# =====================================================================
+# ── Browser Caching ─────────────────────────────────────────
 <IfModule mod_expires.c>
   ExpiresActive On
-
-  # HTML - short cache (content may change)
-  ExpiresByType text/html                    "access plus 1 hour"
-
-  # Images - long cache
-  ExpiresByType image/jpeg                   "access plus 1 year"
-  ExpiresByType image/webp                   "access plus 1 year"
-  ExpiresByType image/png                    "access plus 1 year"
-  ExpiresByType image/gif                    "access plus 1 year"
-  ExpiresByType image/svg+xml                "access plus 1 year"
-  ExpiresByType image/x-icon                 "access plus 1 year"
-  ExpiresByType image/vnd.microsoft.icon     "access plus 1 year"
-
-  # CSS and JS
-  ExpiresByType text/css                     "access plus 1 year"
-  ExpiresByType application/javascript       "access plus 1 year"
-  ExpiresByType text/javascript              "access plus 1 year"
-
-  # Fonts
-  ExpiresByType font/woff                    "access plus 1 year"
-  ExpiresByType font/woff2                   "access plus 1 year"
-  ExpiresByType application/font-woff        "access plus 1 year"
-  ExpiresByType application/font-woff2       "access plus 1 year"
-  ExpiresByType application/x-font-woff      "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/svg+xml                 "access plus 1 year"
+  ExpiresByType text/css                      "access plus 1 month"
+  ExpiresByType application/javascript        "access plus 1 month"
+  ExpiresByType font/woff2                    "access plus 1 year"
+  ExpiresByType font/woff                     "access plus 1 year"
+  ExpiresByType text/html                     "access plus 1 hour"
 </IfModule>
 
-# Cache-Control headers
+# ── Cache-Control Headers ───────────────────────────────────
 <IfModule mod_headers.c>
-  # Images, fonts, CSS, JS - immutable after 1 year
-  <FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|ico|woff|woff2|css|js)$">
+  # Immutable assets
+  <FilesMatch "\.(webp|jpg|jpeg|png|gif|ico|woff2|woff)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
-  # HTML
-  <FilesMatch "\.html$">
-    Header set Cache-Control "public, max-age=3600"
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
-  # PHP
-  <FilesMatch "\.php$">
-    Header set Cache-Control "no-store, no-cache, must-revalidate"
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
 
-  # Security headers
+  # Security Headers
   Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
   Header always set X-XSS-Protection "1; mode=block"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-
-  # Remove ETags (rely on Cache-Control instead)
-  Header unset ETag
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"
 </IfModule>
 
-FileETag None
-
-# =====================================================================
-# WebP SERVING (serve .webp when browser supports it and file exists)
-# =====================================================================
+# ── HTTPS Redirect ──────────────────────────────────────────
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTP_ACCEPT} image/webp
-  RewriteCond %{REQUEST_FILENAME} \.(jpe?g|png)$
-  RewriteCond %{REQUEST_FILENAME}\.webp -f
-  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,L]
+
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Remove trailing slash from non-directory URLs
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [R=301,L]
+
+  # Custom 404
+  ErrorDocument 404 /index.html
 </IfModule>
 
-<IfModule mod_headers.c>
-  <FilesMatch "\.(webp)$">
-    Header append Vary Accept
-  </FilesMatch>
-</IfModule>
-
-# =====================================================================
-# MIME TYPES
-# =====================================================================
+# ── MIME Types ──────────────────────────────────────────────
 <IfModule mod_mime.c>
   AddType image/webp .webp
   AddType font/woff2 .woff2
-  AddType font/woff .woff
-</IfModule>
-
-# =====================================================================
-# KEEP-ALIVE
-# =====================================================================
-<IfModule mod_headers.c>
-  Header set Connection keep-alive
+  AddType application/json .json
 </IfModule>
