@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /mailer/
+Disallow: /cart.html
+Disallow: /checkout.html
+
+Sitemap: https://libasmahal.com/sitemap.xml

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Your Cart — Libaas Mehal</title>
+<title>Your Cart — Libas Mehal</title>
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/png" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,32 +12,12 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" /></noscript>
 <link rel="stylesheet" href="assets/shop.css" />
 </head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="wordmark">
-      <img src="assets/logo.png" alt="Libaas Mehal logo" width="42" height="42" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%236b1f2a%22/%3E%3Ctext x=%2221%22 y=%2227%22 font-family=%22Georgia,serif%22 font-size=%2218%22 fill=%22%23f6efe0%22 text-anchor=%22middle%22%3ELM%3C/text%3E%3C/svg%3E'" />
-      LIBAAS<span> MEHAL</span>
-    </a>
-    <a class="head-back" href="index.html#catalogue">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
-      Continue Shopping
-    </a>
-  </div>
-</header>
-
-<main class="shop-main">
-  <p class="shop-eyebrow">Step 1 of 2</p>
-  <h1 class="shop-title">Your Shopping Cart</h1>
-
-  <div id="cartPageWrap">
-    <!-- populated by JS -->
-  </div>
-</main>
-
-<footer class="shop-footer">Libaas Mehal · Secure order review · support@libaasmehal.com</footer>
-
+<body> <header> <div class="header-inner"> <a href="index.html" class="wordmark"> <img src="assets/logo.png" alt="Libas Mehal logo" width="42" height="42" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%236b1f2a%22/%3E%3Ctext x=%2221%22 y=%2227%22 font-family=%22Georgia,serif%22 font-size=%2218%22 fill=%22%23f6efe0%22 text-anchor=%22middle%22%3ELM%3C/text%3E%3C/svg%3E'" />
+LIBAS<span> MEHAL</span> </a> <a class="head-back" href="index.html#catalogue"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+Continue Shopping
+</a> </div>
+</header> <main class="shop-main"> <p class="shop-eyebrow">Step 1 of 2</p> <h1 class="shop-title">Your Shopping Cart</h1> <div id="cartPageWrap"> </div>
+</main> <footer class="shop-footer">Libas Mehal · Secure order review · support@libasmehal.com</footer>
 <script src="assets/shop-data.js"></script>
 <script>function renderCartPage(){const items=CartStore.get();const wrap=document.getElementById('cartPageWrap');if(items.length===0){wrap.innerHTML=`
       <div class="shop-empty">
