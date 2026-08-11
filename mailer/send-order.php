@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================
- *  LIBAS MEHAL — SEND ORDER EMAIL
+ *  LIBAAS MEHAL — SEND ORDER EMAIL
  * ============================================================
  *  Called by checkout.html (fetch/POST) when a customer clicks
  *  "Place Order". This file:
